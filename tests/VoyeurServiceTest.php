@@ -80,5 +80,36 @@ class Voyeur_ServiceTest extends PHPUnit_Framework_TestCase
         $this->fixture->setPort('broken');
     }
 
+    public function testSetPortWithConstructor()
+    {
+        $port = 1234;
+
+        $fixture = new VoyeurService('localhost', $port);
+
+        $this->assertEquals($port, $fixture->getPort());
+    }
+
+    public function testSetPath()
+    {
+        $path = 'test';
+        $this->fixture->setPath($path);
+
+        $this->assertEquals($path, $this->fixture->getPath());
+    }
+
+    public function testGetPathWithDefaultParameters()
+    {
+        $this->assertEquals('/trombone', $this->fixture->getPath());
+    }
+
+    public function testSetPathWithConstructor()
+    {
+        $path = '/violin';
+
+        $fixture = new VoyeurService('localhost', '1234', $path);
+
+        $this->assertEquals($path, $fixture->getPath());
+    }
+
         
 }

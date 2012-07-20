@@ -30,8 +30,37 @@ class VoyeurService
     {
         $this->setHost($host);
         $this->setPort($port);
+        $this->setPath($path);
 
         return $this;
+    }
+
+    /**
+     * Set Path to be used. If empty, thow an exception
+     *
+     * @param string $path Path to set
+     *
+     * @throws InvalidArgumentException 
+     *
+     * @return void
+     */
+    public function setPath($path)
+    {
+        if (empty($path)) {
+            throw new InvalidArgumentException('The path cannot be empty.');
+        }
+
+        $this->path = $path;
+    }
+
+    /**
+     * Return the path
+     *
+     * @return string Path string
+     */
+    public function getPath()
+    {
+        return $this->path;
     }
 
     /**
