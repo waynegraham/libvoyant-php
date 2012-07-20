@@ -111,5 +111,15 @@ class Voyeur_ServiceTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($path, $fixture->getPath());
     }
 
+    public function testSetPathWithInvalidParameter()
+    {
+         $this->setExpectedException(
+            'InvalidArgumentException',
+            'The path cannot be empty.'
+        );
+
+        $fixture = new VoyeurService('localhost', '8080', '');
+    }
+
         
 }
