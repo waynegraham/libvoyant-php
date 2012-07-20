@@ -15,7 +15,7 @@ class Voyeur_ServiceTest extends PHPUnit_Framework_TestCase
     {
         parent::tearDown();
     }
-    
+
     public function testConstructorDefaultArguments()
     {
         $this->assertInstanceOf('VoyeurService', $this->fixture);
@@ -121,5 +121,8 @@ class Voyeur_ServiceTest extends PHPUnit_Framework_TestCase
         $fixture = new VoyeurService('localhost', '8080', '');
     }
 
-        
+    public function testConstructUrl($params = array())
+    {
+
+    }
 }

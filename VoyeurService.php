@@ -16,6 +16,9 @@ class VoyeurService
 {
     protected $host, $port, $path;
 
+    // query delimters
+    protected $queryDelimeter = '?', $queryStringDelimiter = '&', $queryBrackesEscaped = true;
+
     /**
      * Constructor. All parameters are optional and will use default 
      * values if not specified
@@ -120,4 +123,45 @@ class VoyeurService
     {
         return $this->host;
     }
+
+    protected function constructUrl($params = array())
+    {
+        $queryString = '';
+
+        if (count($params)) {
+            $escapedParams = array();
+
+            foreach ($params as $key => $value) {
+                $escapedParams[] = urlencode($key) . '=' . urlencode($value);
+            }
+
+            $queryString = $this->queryDelimiter . implode(
+                $this->queryStringDelimiter,
+                $escapedParams
+            );
+        }
+
+        $slug = 'http://' . $this->host . ':' . $this->port . $this->path
+            . $queryString;
+
+        return $slug;
+    }
+
+    protected function generateQueryString($params)
+    {
+        $queryString = http_build_query($params);
+
+        return preg_replace('/\\[(?:[0-9]|[1-9][0-9]+)\\]=/', '=', $queryString);
+    }
+
+    protected function sendRawGet($url, $timeout = FALSE)
+    {
+
+    }
+
+    protected function sendRawPost($url, $rawPost, $timeout = FALSE, $contentType = 'text/xml; charset=UTF-8')
+    {
+
+    }
+
 }
