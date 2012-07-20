@@ -29,9 +29,39 @@ class VoyeurService
     public function __construct($host = 'voyeurtools.org', $port = '80', $path = '/trombone')
     {
         $this->setHost($host);
+        $this->setPort($port);
 
         return $this;
+    }
 
+    /**
+     * Set the port to be used. If empty, thow an exception
+     *
+     * @param integer $port Port number
+     *
+     * @throws InvalidArgumentException If the port number is empty
+     *
+     * @return void
+     */
+    public function setPort($port)
+    {
+        $port = (int) $port;
+
+        if ($port <= 0) {
+            throw new InvalidArgumentException('Port must be a valid number');
+        }
+
+        $this->port = $port;
+    }
+
+    /**
+     * Return the port
+     *
+     * @return integer Port number
+     */
+    public function getPort()
+    {
+        return $this->port;
     }
 
     /**

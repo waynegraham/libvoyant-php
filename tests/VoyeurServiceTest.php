@@ -2,16 +2,28 @@
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 class Voyeur_ServiceTest extends PHPUnit_Framework_TestCase
 {
+
+    var $fixture;
+
+    public function setUp()
+    {
+        parent::setUp();
+        $this->fixture = new VoyeurService();
+    }
+
+    public function tearDown()
+    {
+        parent::tearDown();
+    }
+    
     public function testConstructorDefaultArguments()
     {
-        $fixture = new VoyeurService();
-        $this->assertInstanceOf('VoyeurService', $fixture);
+        $this->assertInstanceOf('VoyeurService', $this->fixture);
     }
 
     public function testGetHostWithDefaultConstructor()
     {
-        $fixture = new VoyeurService();
-        $host = $fixture->getHost();
+        $host = $this->fixture->getHost();
 
         $this->assertEquals('voyeurtools.org', $host);
     }
@@ -19,11 +31,10 @@ class Voyeur_ServiceTest extends PHPUnit_Framework_TestCase
     public function testSetHost()
     {
         $host = "localhost";
-        $fixture = new VoyeurService();
 
-        $fixture->setHost($host);
+        $this->fixture->setHost($host);
 
-        $this->assertEquals($host, $fixture->getHost());
+        $this->assertEquals($host, $this->fixture->getHost());
 
     }
 
@@ -34,17 +45,25 @@ class Voyeur_ServiceTest extends PHPUnit_Framework_TestCase
             'Host parameter cannot be empty'
         );
 
-        $fixture = new VoyeurService();
-        $fixture->setHost('');
+        $this->fixture->setHost('');
     }
 
     public function testSetHostWithConstructor()
     {
         $host = 'example.com';
+        $this->fixture->setHost($host);
 
-        $fixture = new VoyeurService($host);
-
-
-        $this->assertEquals($host, $fixture->getHost());
+        $this->assertEquals($host, $this->fixture->getHost());
     }
+
+    public function testSetPort()
+    {
+        $port = 1234;
+
+        $this->fixture->setPort($port);
+
+        $this->assertEquals($port, $this->fixture->getPort());
+    }
+
+        
 }
