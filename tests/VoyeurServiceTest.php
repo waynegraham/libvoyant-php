@@ -65,5 +65,20 @@ class Voyeur_ServiceTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($port, $this->fixture->getPort());
     }
 
+    public function testGetPortWithDefaultParameters()
+    {
+        $this->assertEquals(80, $this->fixture->getPort());
+    }
+
+    public function testSetPortWithInvalidParameter()
+    {
+        $this->setExpectedException(
+            'InvalidArgumentException',
+            'Port must be a valid number'
+        );
+
+        $this->fixture->setPort('broken');
+    }
+
         
 }
