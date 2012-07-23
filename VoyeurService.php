@@ -12,12 +12,30 @@
  * @license   http://www.apache.org/licenses/LICENSE-2.0 Apache 2.0
  * @link      https://github.com/waynegraham/libvoyant-php
  */
+
+require_once dirname(__FILE__) . '/Response.php';
+require_once dirname(__FILE__) . '/HttpTransport/Interface.php';
+
+/**
+ * Starting point for the Voyeur API. Represents a Trombone server resource and has
+ * methods for interacting with the Voyeur services.
+ *
+ * Example Usage:
+ *
+ * <code>
+ * ...
+ * $voyeur = new VoyeurService();
+ * ...
+ * </code>
+ */
 class VoyeurService
 {
-    protected $host, $port, $path;
+    protected $host, $port, $path, $httpTransport = false;
 
     // query delimters
-    protected $queryDelimeter = '?', $queryStringDelimiter = '&', $queryBrackesEscaped = true;
+    protected $queryDelimeter = '?',
+        $queryStringDelimiter = '&',
+        $queryBrackesEscaped = true;
 
     /**
      * Constructor. All parameters are optional and will use default 
@@ -29,13 +47,32 @@ class VoyeurService
      *
      * @return void
      */
-    public function __construct($host = 'voyeurtools.org', $port = '80', $path = '/trombone')
+    public function __construct($host = 'voyeurtools.org', $port = '80', $path = '/trombone', $httpTransport = false)
     {
         $this->setHost($host);
         $this->setPort($port);
         $this->setPath($path);
 
+        if ($httpTransport) {
+            $this->setHttpTransport($httpTransport);
+        }
+
         return $this;
+    }
+
+    public function setHttpTransport(Voyeur_HttpTransport_Interface $httpTransport)
+    {
+        $this->HttpTransport = $httpTransport;
+    }
+
+    public function getHttpTransport()
+    {
+        if ($this->HttpTransport == false) {
+            include_once dirname(__FILE__) . 'HttpTransport/Curl.php';
+            $this->HttpTransport = new Voyeur_HttpTransport_Curl();
+        }
+
+        return $this->HttpTransport;
     }
 
     /**

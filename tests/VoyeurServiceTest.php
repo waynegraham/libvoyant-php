@@ -16,6 +16,15 @@ class Voyeur_ServiceTest extends PHPUnit_Framework_TestCase
         parent::tearDown();
     }
 
+    public function testGetHttpTransportWithDefaultConstructor()
+    {
+        $httpTransport = $this->fixture->getHttpTransport();
+
+        $this->assertInstanceOf('Voyeur_HttpTransport_Interface', $httpTransport);
+        $this->assertInstanceOf('Voyeur_HttpTransport_Curl', $httpTransport);
+
+    }
+
     public function testConstructorDefaultArguments()
     {
         $this->assertInstanceOf('VoyeurService', $this->fixture);
