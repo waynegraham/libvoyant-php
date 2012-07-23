@@ -112,7 +112,7 @@ class VoyeurService
         }
 
         $this->host = $host;
-    }  
+    }
 
     /**
      * Return the host

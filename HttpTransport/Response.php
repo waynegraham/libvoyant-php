@@ -49,17 +49,33 @@ class Voyeur_HttpTransport_Response
     private $_statusCode, $_statusMessage;
     private $_mimeType, $_encoding, $_responseBody;
 
+    /**
+     * Get an HTTP status message based on a status code
+     *
+     * @param integer $statusCode Status code to look up
+     *
+     * @return string Status code message
+     */
     public static function getDefaultStatusMessage($statusCode)
     {
         $statusCode = (int) $statusCode;
 
+        $message = "Unknown Status";
+
         if (isset(self::$_defaultStatusMessage[$statusCode])) {
-            return self::$_defaultStatusMessage[$statusCode];
+            $message = self::$_defaultStatusMessage[$statusCode];
         }
 
-        return "Unknown Status";
+        return $message;
     }
 
+    /**
+     * Construct an HTTP transport response
+     *
+     * @param integer $statusCode   HTTP status code
+     * @param string  $contentType  Value of the Content-Type HTTP header
+     * @param string  $responseBody Body of the HTTP response
+     */
     public function __construct($statusCode, $contentType, $responseBody)
     {
         $this->_statusCode = (int) $statusCode;
@@ -71,28 +87,69 @@ class Voyeur_HttpTransport_Response
         $this->_mimeType = 'text/plain';
         $this->_encoding = 'UTF-8';
 
+        if ($contentType) {
+            $contentTypeParts = explode(';', $contentType, 2);
+
+            if (isset($contentTypeParts[0])) {
+                $this->_mimeType = trim($contentTypeParts[0]);
+            }
+
+            if (isset($contentTypeParts[1])) {
+                $contentTypeParts = explode('=', $contentTypeParts[1]);
+
+                if (isset($contentTypeParts[1])) {
+                    $this->_encoding = trim($contentTypeParts[1]);
+                }
+            }
+        }
+
     }
 
+    /**
+     * Return the response's status code
+     *
+     * @return integer Status code
+     */
     public function getStatusCode()
     {
         return $this->_statusCode;
     }
 
+    /**
+     * Return the response's status message
+     *
+     * @return string Status message
+     */
     public function getStatusMessage()
     {
         return $this->_statusMessage;
     }
 
+    /**
+     * Return the mimetype of the response body
+     *
+     * @return string Response body mimetype
+     */
     public function getMimeType()
     {
         return $this->_mimeType;
     }
 
+    /**
+     * Return the charset encoding for the response body
+     *
+     * @return string Response body's charset encoding
+     */
     public function getEncoding()
     {
         return $this->_encoding;
     }
 
+    /**
+     * Get the raw response body
+     *
+     * @return string Response body
+     */
     public function getBody()
     {
         return $this->_responseBody;
