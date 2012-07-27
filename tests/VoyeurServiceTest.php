@@ -16,12 +16,68 @@ class Voyeur_ServiceTest extends PHPUnit_Framework_TestCase
         parent::tearDown();
     }
 
+    public function getMockHttpTransportInterface()
+    {
+        return $this->getMock(
+            'Voyeur_HttpTransport_Interface',
+            array(
+                'getDefaultTimeout',
+                'setDefaultTimeout',
+                'setAuthenticationCredentials',
+                'performGetRequest',
+                'performHeadRequest',
+                'performPostRequest'
+            )
+        );
+    }
+
     public function testGetHttpTransportWithDefaultConstructor()
     {
         $httpTransport = $this->fixture->getHttpTransport();
 
+        $this->assertInstanceOf(
+            'Voyeur_HttpTransport_Interface',
+            $httpTransport,
+            'Default HTTP transport does not implement interface'
+        );
+
+        $this->assertInstanceOf(
+            'Voyeur_HttpTransport_Curl',
+            $httpTransport,
+            'Default wrapper is Curl'
+        );
+    }
+
+    public function testSetHttpTransport()
+    {
+        $transport = new Voyeur_HttpTransport_Curl();
+
+        $this->fixture->setHttpTransport($transport);
+        $httpTransport = $this->fixture->getHttpTransport();
+
         $this->assertInstanceOf('Voyeur_HttpTransport_Interface', $httpTransport);
         $this->assertInstanceOf('Voyeur_HttpTransport_Curl', $httpTransport);
+        $this->assertEquals($transport, $httpTransport);
+    }
+
+    public function testSetHttpWithConstructor()
+    {
+        $transport = new Voyeur_HttpTransport_Curl();
+
+        $fixture = new VoyeurService(
+            'localhost',
+            8080,
+            '/trombone',
+            $transport
+        );
+
+
+        $httpTransport = $fixture->getHttpTransport();
+
+        $this->assertInstanceOf('Voyeur_HttpTransport_Interface', $httpTransport);
+        $this->assertInstanceOf('Voyeur_HttpTransport_Curl', $httpTransport);
+
+        $this->assertEquals($fixture->getHttpTransport(), $httpTransport);
 
     }
 
@@ -100,20 +156,31 @@ class Voyeur_ServiceTest extends PHPUnit_Framework_TestCase
 
     public function testSetPath()
     {
-        $path = 'test';
+        $path = '/test/';
         $this->fixture->setPath($path);
 
         $this->assertEquals($path, $this->fixture->getPath());
     }
 
+    public function testSetPathWithSlashes()
+    {
+        $newPath = 'new/path';
+        $containedPath = "/{$newPath}/";
+
+        $this->fixture->setPath($newPath);
+        $path = $this->fixture->getPath();
+
+        $this->assertEquals($containedPath, $path, 'setPath did not ensure property with slashes');
+    }
+
     public function testGetPathWithDefaultParameters()
     {
-        $this->assertEquals('/trombone', $this->fixture->getPath());
+        $this->assertEquals('/trombone/', $this->fixture->getPath());
     }
 
     public function testSetPathWithConstructor()
     {
-        $path = '/violin';
+        $path = '/violin/';
 
         $fixture = new VoyeurService('localhost', '1234', $path);
 
@@ -128,6 +195,28 @@ class Voyeur_ServiceTest extends PHPUnit_Framework_TestCase
         );
 
         $fixture = new VoyeurService('localhost', '8080', '');
+    }
+
+    public function testGetDefaultTimeoutCallsThroughTransport()
+    {
+        $mockTransport = $this->getMockHttpTransportInterface();
+        $mockTransport->expects($this->once())->method('getDefaultTimeout');
+
+        $this->fixture->setHttpTransport($mockTransport);
+        $timeout = $this->fixture->getDefaultTimeout();
+
+
+    }
+
+    public function testSetTimeoutThroughCallsToTransport()
+    {
+        $timeout = 12345;
+
+        $mockTransport = $this->getMockHttpTransportInterface();
+        $mockTransport->expects($this->once())->method('setDefaultTimeout')->with($this->equalTo($timeout));
+
+        $this->fixture->setHttpTransport($mockTransport);
+        $this->fixture->setDefaultTimeout($timeout);
     }
 
     public function testConstructUrl($params = array())

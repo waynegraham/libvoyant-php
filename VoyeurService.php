@@ -91,7 +91,14 @@ class VoyeurService
             throw new InvalidArgumentException('The path cannot be empty.');
         }
 
-        $this->path = $path;
+        $path = trim($path, '/');
+
+        if (strlen($path) > 0) {
+            $this->path = '/' . $path . '/';
+        } else {
+            $this->path = '/';
+        }
+
     }
 
     /**
@@ -160,6 +167,29 @@ class VoyeurService
     public function getHost()
     {
         return $this->host;
+    }
+
+    /**
+     * Get the current default timeout setting (initially 60) in seconds
+     *
+     * @return float
+     *
+     */
+    public function getDefaultTimeout()
+    {
+        return $this->getHttpTransport()->getDefaultTimeout();
+    }
+
+    /**
+     * Set the default timeout in seconds
+     *
+     * @param float $timeout Timeout value in seconds
+     *
+     * @return void
+     */
+    public function setDefaultTimeout($timeout)
+    {
+        $this->getHttpTransport()->setDefaultTimeout($timeout);
     }
 
     protected function constructUrl($params = array())
