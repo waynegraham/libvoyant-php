@@ -1,7 +1,8 @@
 <phpdox xmlns="http://phpdox.de/config">
     <project name="libVoyeur-php" source="./" workdir="build/phpdox">
         <collector publiconly="false">
-            <include mask="./*.php" />
+          <include mask="./*.php" />
+          <include mask="HttpTransport/*.php" />
             <exclude mask="tests/*.php" />
         </collector>
 

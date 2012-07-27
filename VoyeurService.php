@@ -15,6 +15,7 @@
 
 require_once dirname(__FILE__) . '/Response.php';
 require_once dirname(__FILE__) . '/HttpTransport/Interface.php';
+require_once dirname(__FILE__) . '/HttpTransport/Curl.php';
 
 /**
  * Starting point for the Voyeur API. Represents a Trombone server resource and has
@@ -62,17 +63,17 @@ class VoyeurService
 
     public function setHttpTransport(Voyeur_HttpTransport_Interface $httpTransport)
     {
-        $this->HttpTransport = $httpTransport;
+        $this->httpTransport = $httpTransport;
     }
 
     public function getHttpTransport()
     {
-        if ($this->HttpTransport == false) {
-            include_once dirname(__FILE__) . 'HttpTransport/Curl.php';
-            $this->HttpTransport = new Voyeur_HttpTransport_Curl();
+        if ($this->httpTransport == false) {
+            include_once dirname(__FILE__) . '/HttpTransport/Curl.php';
+            $this->httpTransport = new Voyeur_HttpTransport_Curl();
         }
 
-        return $this->HttpTransport;
+        return $this->httpTransport;
     }
 
     /**

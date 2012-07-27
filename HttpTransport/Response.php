@@ -1,5 +1,7 @@
 <?php
 /* set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
+
+
 class Voyeur_HttpTransport_Response
 {
     static private $_defaultStatusMessage = array(
@@ -154,7 +156,4 @@ class Voyeur_HttpTransport_Response
     {
         return $this->_responseBody;
     }
-
-
-
 }

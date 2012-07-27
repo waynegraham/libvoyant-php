@@ -17,7 +17,7 @@ class Voyeur_HttpTransport_Curl extends Voyeur_HttpTransport_Abstract
             $this->_curl,
             array(
                 CURLOPT_RETURNTRANSFER => true,
-                CURLOPT_BINARYTRANSER => true,
+                CURLOPT_BINARYTRANSFER => true,
                 CURLOPT_HEADER => false
             )
         );
